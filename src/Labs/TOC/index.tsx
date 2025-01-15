@@ -20,6 +20,11 @@ export default function TOC() {
         <li>
           <Link to="/Kambaz">Kambaz</Link>
         </li>
+        <li>
+          <Link to="https://github.com/jakefriedman519" id="wd-github">
+            GitHub
+          </Link>
+        </li>
       </ul>
     </div>
   );
