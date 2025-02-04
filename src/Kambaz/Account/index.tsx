@@ -5,7 +5,7 @@ import Signup from "./Signup.tsx";
 import AccountNavigation from "./Navigation.tsx";
 export default function Account() {
   return (
-    <div id="wd-account-screen">
+    <div id="wd-account-screen" className="pt-3">
       <table>
         <tr>
           <td valign="top">
