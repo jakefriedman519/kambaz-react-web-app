@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Button, Card, Col, Row } from "react-bootstrap";
 export default function Dashboard() {
   return (
-    <div id="wd-dashboard">
+    <div id="wd-dashboard" className="pt-3">
       <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
       <h2 id="wd-dashboard-published">Published Courses (12)</h2> <hr />
       <div id="wd-dashboard-courses">
