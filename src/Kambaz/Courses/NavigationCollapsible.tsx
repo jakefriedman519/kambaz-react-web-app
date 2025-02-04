@@ -18,7 +18,7 @@ export default function NavigationCollapsible() {
       <Container fluid className="p-0">
         <Navbar.Toggle className="bg-white ms-2" />
         <Navbar.Brand>
-          <h1 className="text-white">CS 1234</h1>
+          <h1 className="text-white">Course 1234</h1>
         </Navbar.Brand>
         <NavDropdown title="" className="text-white me-3" align="end">
           <Nav>
