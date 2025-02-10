@@ -7,8 +7,17 @@ import {
 } from "./AssignmentControls.tsx";
 import { MdArrowDropDown } from "react-icons/md";
 import { IoEllipsisVertical } from "react-icons/io5";
+import { assignments } from "../../Database";
+import { useParams } from "react-router-dom";
+
+function formatDate(isoString: string): string {
+  const [year, month, day] = isoString.split("-").map(Number);
+  const date = new Date(year, month - 1, day);
+  return date.toLocaleDateString("en-US", { month: "long", day: "numeric" });
+}
 
 export default function Assignments() {
+  const { cid } = useParams();
   return (
     <div id="wd-assignments" className="pe-5">
       <div className="mb-3 d-flex justify-content-between">
@@ -53,69 +62,34 @@ export default function Assignments() {
             </div>
           </div>
         </ListGroup.Item>
-        <ListGroup.Item className="p-3 ps-1 wd-assignment d-flex justify-content-between align-items-center">
-          <div className="wd-assignment-details d-flex align-items-center">
-            <AssignmentBeginningControls />
-            <div>
-              <div>
-                <a
-                  href="#/Kambaz/Courses/1234/Assignments/123"
-                  className="wd-assignment-link"
-                >
-                  A1 - ENV + HTML
-                </a>
+        {assignments
+          .filter((assignment) => assignment.course === cid)
+          .map((assignment) => (
+            <ListGroup.Item className="p-3 ps-1 wd-assignment d-flex justify-content-between align-items-center">
+              <div className="wd-assignment-details d-flex align-items-center">
+                <AssignmentBeginningControls />
+                <div>
+                  <div>
+                    <a
+                      href={`#/Kambaz/Courses/${cid}/Assignments/${assignment._id}`}
+                      className="wd-assignment-link"
+                    >
+                      {assignment.title}
+                    </a>
+                  </div>
+                  <div className="fs-6">
+                    <span className="text-danger">Multiple Modules</span> |{" "}
+                    <strong>Not available until</strong>{" "}
+                    {formatDate(assignment.availableFrom)} at 12:00am |
+                    <br />
+                    <strong>Due</strong> {formatDate(assignment.due)} at 11:59pm
+                    | 100 pts
+                  </div>
+                </div>
               </div>
-              <div className="fs-6">
-                <span className="text-danger">Multiple Modules</span> |{" "}
-                <strong>Not available until</strong> May 6 at 12:00am |<br />
-                <strong>Due</strong> May 13 at 11:59pm | 100 pts
-              </div>
-            </div>
-          </div>
-          <AssignmentEndControls />
-        </ListGroup.Item>
-        <ListGroup.Item className="p-3 ps-1 wd-assignment d-flex justify-content-between align-items-center">
-          <div className="wd-assignment-details d-flex align-items-center">
-            <AssignmentBeginningControls />
-            <div>
-              <div>
-                <a
-                  href="#/Kambaz/Courses/1234/Assignments/123"
-                  className="wd-assignment-link"
-                >
-                  A2 - CSS + BOOTSTRAP
-                </a>
-              </div>
-              <div className="fs-6">
-                <span className="text-danger">Multiple Modules</span> |{" "}
-                <strong>Not available until</strong> May 13 at 12:00am |<br />
-                <strong>Due</strong> May 20 at 11:59pm | 100 pts
-              </div>
-            </div>
-          </div>
-          <AssignmentEndControls />
-        </ListGroup.Item>
-        <ListGroup.Item className="p-3 ps-1 wd-assignment d-flex justify-content-between align-items-center">
-          <div className="wd-assignment-details d-flex align-items-center">
-            <AssignmentBeginningControls />
-            <div>
-              <div>
-                <a
-                  href="#/Kambaz/Courses/1234/Assignments/123"
-                  className="wd-assignment-link"
-                >
-                  A3 - JAVASCRIPT + REACT
-                </a>
-              </div>
-              <div className="fs-6">
-                <span className="text-danger">Multiple Modules</span> |{" "}
-                <strong>Not available until</strong> May 20 at 12:00am |<br />
-                <strong>Due</strong> May 27 at 11:59pm | 100 pts
-              </div>
-            </div>
-          </div>
-          <AssignmentEndControls />
-        </ListGroup.Item>
+              <AssignmentEndControls />
+            </ListGroup.Item>
+          ))}
       </ListGroup>
     </div>
   );

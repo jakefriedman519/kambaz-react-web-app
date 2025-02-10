@@ -8,21 +8,27 @@ import {
 } from "react-bootstrap";
 import FormCheckLabel from "react-bootstrap/FormCheckLabel";
 import FormCheckInput from "react-bootstrap/FormCheckInput";
+import { assignments } from "../../Database";
+import { Link, useParams } from "react-router-dom";
 
 export default function AssignmentEditor() {
+  const { aid, cid } = useParams();
+  const assignment = assignments.find((assignment) => assignment._id === aid);
   return (
     <div id="wd-assignments-editor" className="me-3 ms-3">
       <div className="row mb-3">
         <FormGroup>
           <FormLabel htmlFor="wd-name">Assignment Name </FormLabel>
-          <FormControl id="wd-name" defaultValue="A1 - ENV + HTML" />
+          <FormControl
+            id="wd-name"
+            defaultValue={assignment && assignment.title}
+          />
         </FormGroup>
       </div>
       <div className="row mb-3">
         <div>
           <FormControl as="textarea" id="wd-description">
-            The assignment is available online. Submit a link to the landing
-            page of your Kambaz application running on Netlify.
+            {assignment && assignment.description}
           </FormControl>
         </div>
       </div>
@@ -31,7 +37,7 @@ export default function AssignmentEditor() {
           Points
         </FormLabel>
         <div className="col-8">
-          <FormControl defaultValue={100} />
+          <FormControl defaultValue={assignment && assignment.points} />
         </div>
       </FormGroup>
       <FormGroup className="row mb-3" controlId="wd-group">
@@ -133,13 +139,19 @@ export default function AssignmentEditor() {
             </FormGroup>
             <FormGroup controlId="wd-due-date" className="mb-3">
               <FormLabel className="fw-bold mb-1">Due</FormLabel>
-              <FormControl type="date" defaultValue="2024-05-13" />
+              <FormControl
+                type="date"
+                defaultValue={assignment && assignment.due}
+              />
             </FormGroup>
             <div className="row">
               <div className="col-6">
                 <FormGroup controlId="wd-available-from">
                   <FormLabel className="fw-bold mb-1">Available From</FormLabel>
-                  <FormControl type="date" defaultValue="2024-05-06" />
+                  <FormControl
+                    type="date"
+                    defaultValue={assignment && assignment.availableFrom}
+                  />
                 </FormGroup>
               </div>
               <div className="col-6">
@@ -147,7 +159,10 @@ export default function AssignmentEditor() {
                   <FormLabel className="fw-bold mb-1">
                     Available Until
                   </FormLabel>
-                  <FormControl type="date" defaultValue="2024-05-13" />
+                  <FormControl
+                    type="date"
+                    defaultValue={assignment && assignment.availableUntil}
+                  />
                 </FormGroup>
               </div>
             </div>
@@ -156,10 +171,14 @@ export default function AssignmentEditor() {
       </div>
       <div className="float-end mb-3">
         <div className="d-flex">
-          <Button variant="secondary" className="me-1">
-            Cancel
-          </Button>
-          <Button variant="danger">Save</Button>
+          <Link to={`/Kambaz/Courses/${cid}/Assignments`}>
+            <Button variant="secondary" className="me-1">
+              Cancel
+            </Button>
+          </Link>
+          <Link to={`/Kambaz/Courses/${cid}/Assignments`}>
+            <Button variant="danger">Save</Button>
+          </Link>
         </div>
       </div>
     </div>
