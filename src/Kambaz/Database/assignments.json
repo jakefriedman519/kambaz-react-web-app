@@ -34,9 +34,9 @@
     "title": "Aerodynamics Quiz",
     "description": "This is an assignment",
     "course": "RS102",
-    "availableFrom": "",
-    "availableUntil": "",
-    "due": "",
+    "availableFrom": "2024-05-06",
+    "availableUntil": "2024-05-13",
+    "due": "2024-05-13",
     "points": 100
   },
   {
@@ -44,9 +44,9 @@
     "title": "Flow Analysis",
     "description": "This is an assignment",
     "course": "RS102",
-    "availableFrom": "",
-    "availableUntil": "",
-    "due": "",
+    "availableFrom": "2024-05-13",
+    "availableUntil": "2024-05-20",
+    "due": "2024-05-20",
     "points": 100
   },
   {
@@ -54,9 +54,9 @@
     "title": "Heating Analysis",
     "description": "This is an assignment",
     "course": "RS102",
-    "availableFrom": "",
-    "availableUntil": "",
-    "due": "",
+    "availableFrom": "2024-05-20",
+    "availableUntil": "2024-05-27",
+    "due": "2024-05-27",
     "points": 100
   },
   {
@@ -64,9 +64,9 @@
     "title": "Structural Design Task",
     "description": "This is an assignment",
     "course": "RS103",
-    "availableFrom": "",
-    "availableUntil": "",
-    "due": "",
+    "availableFrom": "2024-05-06",
+    "availableUntil": "2024-05-13",
+    "due": "2024-05-13",
     "points": 100
   },
   {
@@ -74,9 +74,9 @@
     "title": "Orbital Calculations",
     "description": "This is an assignment",
     "course": "RS103",
-    "availableFrom": "",
-    "availableUntil": "",
-    "due": "",
+    "availableFrom": "2024-05-13",
+    "availableUntil": "2024-05-20",
+    "due": "2024-05-20",
     "points": 100
   },
   {
@@ -84,9 +84,9 @@
     "title": "Systems Engineering Exam",
     "description": "This is an assignment",
     "course": "RS103",
-    "availableFrom": "",
-    "availableUntil": "",
-    "due": "",
+    "availableFrom": "2024-05-20",
+    "availableUntil": "2024-05-27",
+    "due": "2024-05-27",
     "points": 100
   }
 ]
