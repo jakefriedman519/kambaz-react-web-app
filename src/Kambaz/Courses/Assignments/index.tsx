@@ -9,9 +9,8 @@ import { MdArrowDropDown } from "react-icons/md";
 import { IoEllipsisVertical } from "react-icons/io5";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteAssignment, setCreating } from "./reducer.ts";
+import { setCreating } from "./reducer.ts";
 import { v4 as uuidv4 } from "uuid";
-import { useState } from "react";
 
 function formatDate(isoString: string): string {
   const [year, month, day] = isoString.split("-").map(Number);
@@ -81,8 +80,8 @@ export default function Assignments() {
           </div>
         </ListGroup.Item>
         {assignments
-          .filter((assignment) => assignment.course === cid)
-          .map((assignment) => (
+          .filter((assignment: any) => assignment.course === cid)
+          .map((assignment: any) => (
             <ListGroup.Item className="p-3 ps-1 wd-assignment d-flex justify-content-between align-items-center">
               <div className="wd-assignment-details d-flex align-items-center">
                 {currentUser.role === "FACULTY" && (

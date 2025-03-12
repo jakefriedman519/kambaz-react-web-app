@@ -6,10 +6,7 @@ import Courses from "./Courses";
 import "./styles.css";
 import ProtectedRoute from "./Account/ProtectedRoute.tsx";
 import EnrollmentProtectedRoute from "./Courses/ProtectedRoute.tsx";
-import { useSelector } from "react-redux";
 export default function Kambaz() {
-  const { courses } = useSelector((state: any) => state.courseReducer);
-
   return (
     <div id="wd-kambaz">
       <KambazNavigation />

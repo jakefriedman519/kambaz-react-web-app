@@ -110,16 +110,16 @@ export default function Dashboard() {
       <div id="wd-dashboard-courses">
         <Row xs={1} md={5} className="g-4">
           {courses
-            .filter((course) =>
+            .filter((course: any) =>
               filterEnrollments
                 ? enrollments.some(
-                    (enrollment) =>
+                    (enrollment: any) =>
                       enrollment.user === currentUser._id &&
                       enrollment.course === course._id,
                   )
                 : course,
             )
-            .map((course) => (
+            .map((course: any) => (
               <Col className="wd-dashboard-course" style={{ width: "300px" }}>
                 <Card>
                   <Link
