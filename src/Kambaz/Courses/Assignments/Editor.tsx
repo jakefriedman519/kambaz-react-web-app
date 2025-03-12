@@ -20,7 +20,7 @@ export default function AssignmentEditor() {
   const dispatch = useDispatch();
   const { creating } = useSelector((state: any) => state.assignmentReducer);
   const fetchAssignment = () => {
-    const assignment = assignments.find((a) => a._id === aid);
+    const assignment = assignments.find((a: any) => a._id === aid);
     if (!assignment) {
       setAssignment({
         _id: aid,
