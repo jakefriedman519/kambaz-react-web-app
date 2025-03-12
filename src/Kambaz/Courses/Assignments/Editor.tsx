@@ -8,12 +8,40 @@ import {
 } from "react-bootstrap";
 import FormCheckLabel from "react-bootstrap/FormCheckLabel";
 import FormCheckInput from "react-bootstrap/FormCheckInput";
-import { assignments } from "../../Database";
 import { Link, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addAssignment, updateAssignment } from "./reducer.ts";
 
 export default function AssignmentEditor() {
   const { aid, cid } = useParams();
-  const assignment = assignments.find((assignment) => assignment._id === aid);
+  const [assignment, setAssignment] = useState<any>({});
+  const { assignments } = useSelector((state: any) => state.assignmentReducer);
+  const dispatch = useDispatch();
+  const { creating } = useSelector((state: any) => state.assignmentReducer);
+  const fetchAssignment = () => {
+    const assignment = assignments.find((a) => a._id === aid);
+    if (!assignment) {
+      setAssignment({
+        _id: aid,
+        course: cid,
+        availableFrom: "2025-01-01",
+        availableUntil: "2025-01-01",
+        due: "2025-01-01",
+      });
+    } else {
+      setAssignment(assignment);
+    }
+  };
+
+  const saveAssignment = () => {
+    if (creating) {
+      dispatch(addAssignment(assignment));
+    } else {
+      dispatch(updateAssignment(assignment));
+    }
+  };
+  useEffect(() => fetchAssignment(), []);
   return (
     <div id="wd-assignments-editor" className="me-3 ms-3">
       <div className="row mb-3">
@@ -22,12 +50,21 @@ export default function AssignmentEditor() {
           <FormControl
             id="wd-name"
             defaultValue={assignment && assignment.title}
+            onChange={(e) =>
+              setAssignment({ ...assignment, title: e.target.value })
+            }
           />
         </FormGroup>
       </div>
       <div className="row mb-3">
         <div>
-          <FormControl as="textarea" id="wd-description">
+          <FormControl
+            as="textarea"
+            id="wd-description"
+            onChange={(e) =>
+              setAssignment({ ...assignment, description: e.target.value })
+            }
+          >
             {assignment && assignment.description}
           </FormControl>
         </div>
@@ -37,7 +74,12 @@ export default function AssignmentEditor() {
           Points
         </FormLabel>
         <div className="col-8">
-          <FormControl defaultValue={assignment && assignment.points} />
+          <FormControl
+            defaultValue={assignment && assignment.points}
+            onChange={(e) =>
+              setAssignment({ ...assignment, points: e.target.value })
+            }
+          />
         </div>
       </FormGroup>
       <FormGroup className="row mb-3" controlId="wd-group">
@@ -141,7 +183,10 @@ export default function AssignmentEditor() {
               <FormLabel className="fw-bold mb-1">Due</FormLabel>
               <FormControl
                 type="date"
-                defaultValue={assignment && assignment.due}
+                defaultValue={assignment ? assignment.due : "2025-01-01"}
+                onChange={(e) =>
+                  setAssignment({ ...assignment, due: e.target.value })
+                }
               />
             </FormGroup>
             <div className="row">
@@ -150,7 +195,15 @@ export default function AssignmentEditor() {
                   <FormLabel className="fw-bold mb-1">Available From</FormLabel>
                   <FormControl
                     type="date"
-                    defaultValue={assignment && assignment.availableFrom}
+                    defaultValue={
+                      assignment ? assignment.availableFrom : "2025-01-01"
+                    }
+                    onChange={(e) =>
+                      setAssignment({
+                        ...assignment,
+                        availableFrom: e.target.value,
+                      })
+                    }
                   />
                 </FormGroup>
               </div>
@@ -161,7 +214,15 @@ export default function AssignmentEditor() {
                   </FormLabel>
                   <FormControl
                     type="date"
-                    defaultValue={assignment && assignment.availableUntil}
+                    defaultValue={
+                      assignment ? assignment.availableUntil : "2025-01-01"
+                    }
+                    onChange={(e) =>
+                      setAssignment({
+                        ...assignment,
+                        availableUntil: e.target.value,
+                      })
+                    }
                   />
                 </FormGroup>
               </div>
@@ -177,7 +238,9 @@ export default function AssignmentEditor() {
             </Button>
           </Link>
           <Link to={`/Kambaz/Courses/${cid}/Assignments`}>
-            <Button variant="danger">Save</Button>
+            <Button variant="danger" onClick={saveAssignment}>
+              Save
+            </Button>
           </Link>
         </div>
       </div>

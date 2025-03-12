@@ -8,9 +8,10 @@ import AssignmentEditor from "./Assignments/Editor.tsx";
 import { FaAlignJustify } from "react-icons/fa";
 import PeopleTable from "./People/Table.tsx";
 import NavigationCollapsible from "./NavigationCollapsible.tsx";
-import { courses } from "../Database";
+import { useSelector } from "react-redux";
 
 export default function Courses() {
+  const { courses } = useSelector((state: any) => state.courseReducer);
   const { cid } = useParams();
   const { pathname } = useLocation();
   const course = courses.find((course) => course._id === cid);

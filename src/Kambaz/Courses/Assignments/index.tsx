@@ -7,8 +7,11 @@ import {
 } from "./AssignmentControls.tsx";
 import { MdArrowDropDown } from "react-icons/md";
 import { IoEllipsisVertical } from "react-icons/io5";
-import { assignments } from "../../Database";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteAssignment, setCreating } from "./reducer.ts";
+import { v4 as uuidv4 } from "uuid";
+import { useState } from "react";
 
 function formatDate(isoString: string): string {
   const [year, month, day] = isoString.split("-").map(Number);
@@ -18,6 +21,15 @@ function formatDate(isoString: string): string {
 
 export default function Assignments() {
   const { cid } = useParams();
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const { assignments } = useSelector((state: any) => state.assignmentReducer);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const createAssignment = () => {
+    const id = uuidv4();
+    dispatch(setCreating(true));
+    navigate(`${id}`);
+  };
   return (
     <div id="wd-assignments" className="pe-5">
       <div className="mb-3 d-flex justify-content-between">
@@ -29,20 +41,26 @@ export default function Assignments() {
             <FormControl placeholder="Search for assignments" />
           </InputGroup>
         </div>
-        <div>
-          <Button
-            variant="secondary"
-            className="me-1"
-            id="wd-add-assignment-group"
-          >
-            <BsPlus className="fs-5" />
-            Group
-          </Button>
-          <Button variant="danger" id="wd-add-assignment">
-            <BsPlus className="fs-5" />
-            Assignment
-          </Button>
-        </div>
+        {currentUser.role === "FACULTY" && (
+          <div>
+            <Button
+              variant="secondary"
+              className="me-1"
+              id="wd-add-assignment-group"
+            >
+              <BsPlus className="fs-5" />
+              Group
+            </Button>
+            <Button
+              variant="danger"
+              id="wd-add-assignment"
+              onClick={createAssignment}
+            >
+              <BsPlus className="fs-5" />
+              Assignment
+            </Button>
+          </div>
+        )}
       </div>
 
       <ListGroup className="rounded-0 fs-5">
@@ -57,7 +75,7 @@ export default function Assignments() {
               <div className="border rounded-4 ps-2 pe-2 border-dark border-1 border-opacity-50">
                 <span className="fs-6">40% of total</span>
               </div>
-              <BsPlus className="fs-3" />
+              {currentUser.role === "FACULTY" && <BsPlus className="fs-3" />}
               <IoEllipsisVertical className="fs-4" />
             </div>
           </div>
@@ -67,15 +85,24 @@ export default function Assignments() {
           .map((assignment) => (
             <ListGroup.Item className="p-3 ps-1 wd-assignment d-flex justify-content-between align-items-center">
               <div className="wd-assignment-details d-flex align-items-center">
-                <AssignmentBeginningControls />
+                {currentUser.role === "FACULTY" && (
+                  <AssignmentBeginningControls />
+                )}
                 <div>
                   <div>
-                    <a
-                      href={`#/Kambaz/Courses/${cid}/Assignments/${assignment._id}`}
-                      className="wd-assignment-link"
-                    >
-                      {assignment.title}
-                    </a>
+                    {currentUser.role === "FACULTY" ? (
+                      <a
+                        href={`#/Kambaz/Courses/${cid}/Assignments/${assignment._id}`}
+                        className="wd-assignment-link"
+                        onClick={() => dispatch(setCreating(false))}
+                      >
+                        {assignment.title}
+                      </a>
+                    ) : (
+                      <span className="wd-assignment-link">
+                        {assignment.title}
+                      </span>
+                    )}
                   </div>
                   <div className="fs-6">
                     <span className="text-danger">Multiple Modules</span> |{" "}
@@ -83,11 +110,13 @@ export default function Assignments() {
                     {formatDate(assignment.availableFrom)} at 12:00am |
                     <br />
                     <strong>Due</strong> {formatDate(assignment.due)} at 11:59pm
-                    | 100 pts
+                    | {assignment.points} pts
                   </div>
                 </div>
               </div>
-              <AssignmentEndControls />
+              {currentUser.role === "FACULTY" && (
+                <AssignmentEndControls assignmentId={assignment._id} />
+              )}
             </ListGroup.Item>
           ))}
       </ListGroup>

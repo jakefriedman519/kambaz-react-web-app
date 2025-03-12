@@ -81,13 +81,41 @@
     "_id": "M201",
     "name": "Fundamentals of Aerodynamics",
     "description": "Basic aerodynamic concepts and fluid dynamics principles.",
-    "course": "RS102"
+    "course": "RS102",
+    "lessons": [
+      {
+        "_id": "L401",
+        "name": "Aerodynamics Basics",
+        "description": "Overview of different principles of aerodynamics",
+        "module": "M201"
+      },
+      {
+        "_id": "L402",
+        "name": "Fluid Dynamics",
+        "description": "Introduction to the mechanics of fluids",
+        "module": "M201"
+      }
+    ]
   },
   {
     "_id": "M202",
     "name": "Subsonic and Supersonic Flow",
     "description": "Understanding subsonic and supersonic aerodynamic behaviors.",
-    "course": "RS102"
+    "course": "RS102",
+    "lessons": [
+      {
+        "_id": "L501",
+        "name": "Subsonic Flow",
+        "description": "Overview of subsonic aerodynamic behaviors",
+        "module": "M202"
+      },
+      {
+        "_id": "L502",
+        "name": "Supersonic Flow",
+        "description": "Overview of supersonic aerodynamic behaviors",
+        "module": "M202"
+      }
+    ]
   },
   {
     "_id": "M203",
