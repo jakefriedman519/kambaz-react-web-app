@@ -42,6 +42,14 @@ export default function TOC() {
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
+          <Nav.Link
+            href="#/Labs/Lab5"
+            className={`${pathname.includes("Lab5") ? "active" : ""}`}
+          >
+            Lab 5
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
           <Nav.Link href="#/Kambaz">Kambaz</Nav.Link>
         </Nav.Item>
         <Nav.Item>

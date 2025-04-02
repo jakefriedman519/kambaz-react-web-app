@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { deleteAssignment } from "./reducer.ts";
 import { useState } from "react";
 import DeleteAssignmentModal from "./DeleteAssignmentModal.tsx";
+import * as assignmentsClient from "./client.ts";
 export function AssignmentBeginningControls() {
   return (
     <span>
@@ -23,7 +24,8 @@ export function AssignmentEndControls({
 }) {
   const [show, setShow] = useState(false);
   const dispatch = useDispatch();
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
+    await assignmentsClient.deleteAssignment(id);
     dispatch(deleteAssignment(id));
   };
   return (
