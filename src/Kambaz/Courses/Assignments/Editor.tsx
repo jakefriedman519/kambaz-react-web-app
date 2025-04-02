@@ -12,6 +12,8 @@ import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addAssignment, updateAssignment } from "./reducer.ts";
+import * as coursesClient from "../client.ts";
+import * as assignmentsClient from "./client.ts";
 
 export default function AssignmentEditor() {
   const { aid, cid } = useParams();
@@ -34,10 +36,15 @@ export default function AssignmentEditor() {
     }
   };
 
-  const saveAssignment = () => {
+  const saveAssignment = async () => {
     if (creating) {
-      dispatch(addAssignment(assignment));
+      const newAssignment = await coursesClient.createAssignmentForCourse(
+        cid as string,
+        assignment,
+      );
+      dispatch(addAssignment(newAssignment));
     } else {
+      await assignmentsClient.updateAssignment(assignment);
       dispatch(updateAssignment(assignment));
     }
   };
@@ -61,6 +68,7 @@ export default function AssignmentEditor() {
           <FormControl
             as="textarea"
             id="wd-description"
+            defaultValue={assignment.description}
             onChange={(e) =>
               setAssignment({ ...assignment, description: e.target.value })
             }

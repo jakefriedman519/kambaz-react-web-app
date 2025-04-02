@@ -9,9 +9,10 @@ import { MdArrowDropDown } from "react-icons/md";
 import { IoEllipsisVertical } from "react-icons/io5";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setCreating } from "./reducer.ts";
+import { setAssignments, setCreating } from "./reducer.ts";
 import { v4 as uuidv4 } from "uuid";
-
+import { useEffect } from "react";
+import * as coursesClient from "../client.ts";
 function formatDate(isoString: string): string {
   const [year, month, day] = isoString.split("-").map(Number);
   const date = new Date(year, month - 1, day);
@@ -29,6 +30,15 @@ export default function Assignments() {
     dispatch(setCreating(true));
     navigate(`${id}`);
   };
+  const fetchAssignments = async () => {
+    const assignments = await coursesClient.findAssignmentsForCourse(
+      cid as string,
+    );
+    dispatch(setAssignments(assignments));
+  };
+  useEffect(() => {
+    fetchAssignments();
+  }, []);
   return (
     <div id="wd-assignments" className="pe-5">
       <div className="mb-3 d-flex justify-content-between">
