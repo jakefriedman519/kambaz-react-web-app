@@ -49,7 +49,7 @@ export default function Dashboard() {
     }
     dispatch(
       setCourses(
-        courses.map((course) => {
+        courses.map((course: any) => {
           if (course._id === courseId) {
             return { ...course, enrolled: enrolled };
           } else {
