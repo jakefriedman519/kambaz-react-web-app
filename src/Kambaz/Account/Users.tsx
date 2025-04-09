@@ -62,6 +62,7 @@ export default function Users() {
       <h3>Users</h3>
       <FormControl
         onChange={(e) => filterUsersByName(e.target.value)}
+        value={name}
         placeholder="Search people"
         className="float-start w-25 me-2 wd-filter-by-name"
       />
