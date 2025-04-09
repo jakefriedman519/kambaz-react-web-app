@@ -193,7 +193,10 @@ export default function AssignmentEditor() {
                 type="date"
                 defaultValue={assignment ? assignment.due : "2025-01-01"}
                 onChange={(e) =>
-                  setAssignment({ ...assignment, due: e.target.value })
+                  setAssignment({
+                    ...assignment,
+                    due: e.target.value,
+                  })
                 }
               />
             </FormGroup>

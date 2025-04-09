@@ -9,12 +9,27 @@ import { FaAlignJustify } from "react-icons/fa";
 import PeopleTable from "./People/Table.tsx";
 import NavigationCollapsible from "./NavigationCollapsible.tsx";
 import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import * as client from "./client.ts";
 
 export default function Courses() {
   const { courses } = useSelector((state: any) => state.courseReducer);
   const { cid } = useParams();
   const { pathname } = useLocation();
   const course = courses.find((course: any) => course._id === cid);
+  const [users, setUsers] = useState<any[]>([]);
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const courseUsers = await client.findUsersForCourse(cid!);
+        setUsers(courseUsers);
+      } catch (error) {
+        setUsers([]);
+      }
+    };
+
+    fetchUsers();
+  }, [cid]);
   return (
     <div id="wd-courses">
       <div className="mt-3 d-none d-md-block">
@@ -40,7 +55,7 @@ export default function Courses() {
             <Route path="Assignments/:aid" element={<AssignmentEditor />} />
             <Route path="Quizzes" element={<h2>Quizzes</h2>} />
             <Route path="Grades" element={<h2>Grades</h2>} />
-            <Route path="People" element={<PeopleTable />} />
+            <Route path="People" element={<PeopleTable users={users} />} />
           </Routes>
         </div>
       </div>

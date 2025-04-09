@@ -5,26 +5,16 @@ import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import * as userClient from "../Account/client.ts";
 import * as courseClient from "../Courses/client.ts";
-import * as enrollmentClient from "../Courses/Enrollments/client.ts";
 import {
   addCourse,
   deleteCourse,
   updateCourse,
   setCourses,
 } from "../Courses/reducer.ts";
-import {
-  enroll,
-  loadEnrollments,
-  setEnrollments,
-  unenroll,
-} from "../Courses/Enrollments/reducer.ts";
 export default function Dashboard() {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
-  const { enrolledCourseIds } = useSelector(
-    (state: any) => state.enrollmentReducer,
-  );
   const { courses } = useSelector((state: any) => state.courseReducer);
-  const [filterEnrollments, setFilterEnrollments] = useState(true);
+  const [enrolling, setEnrolling] = useState(false);
   const [course, setCourse] = useState<any>({
     _id: "1234",
     name: "New Course",
@@ -35,7 +25,7 @@ export default function Dashboard() {
   });
   const dispatch = useDispatch();
   const addNewCourse = async () => {
-    const newCourse = await userClient.createCourse(course);
+    const newCourse = await courseClient.createCourse(course);
     dispatch(addCourse({ ...newCourse, _id: uuidv4() }));
   };
   const handleDeleteCourse = async (courseId: any) => {
@@ -48,52 +38,63 @@ export default function Dashboard() {
   };
 
   const toggleFilterEnrollments = () => {
-    setFilterEnrollments((prev) => !prev);
+    setEnrolling((prev) => !prev);
   };
 
-  const handleEnroll = async (id: string) => {
-    await enrollmentClient.enrollInCourse(currentUser._id, id);
-    dispatch(enroll({ userId: currentUser._id, courseId: id }));
+  const updateEnrollment = async (courseId: string, enrolled: boolean) => {
+    if (enrolled) {
+      await userClient.enrollIntoCourse(currentUser._id, courseId);
+    } else {
+      await userClient.unenrollFromCourse(currentUser._id, courseId);
+    }
+    dispatch(
+      setCourses(
+        courses.map((course) => {
+          if (course._id === courseId) {
+            return { ...course, enrolled: enrolled };
+          } else {
+            return course;
+          }
+        }),
+      ),
+    );
   };
 
-  const handleUnenroll = async (id: string) => {
-    await enrollmentClient.unenrollInCourse(currentUser._id, id);
-    dispatch(unenroll({ userId: currentUser._id, courseId: id }));
-  };
-
-  const fetchCourses = async (filterEnrollments: boolean) => {
+  const fetchCourses = async () => {
     try {
-      let courses;
-      if (filterEnrollments) {
-        courses = await userClient.findMyCourses();
-      } else {
-        courses = await courseClient.fetchAllCourses();
-      }
+      const allCourses = await courseClient.fetchAllCourses();
+      const enrolledCourses = await userClient.findCoursesForUser(
+        currentUser._id,
+      );
+      const courses = allCourses.map((course: any) => {
+        if (enrolledCourses.find((c: any) => c._id === course._id)) {
+          return { ...course, enrolled: true };
+        } else {
+          return course;
+        }
+      });
       dispatch(setCourses(courses));
     } catch (error) {
       console.error(error);
     }
   };
 
-  const fetchEnrollments = async () => {
+  const findCoursesForUser = async () => {
     try {
-      const enrollments: any[] = await enrollmentClient.getEnrollmentsForUser(
-        currentUser._id,
-      );
-      dispatch(setEnrollments(enrollments));
-      dispatch(loadEnrollments(currentUser._id));
+      const courses = await userClient.findCoursesForUser(currentUser._id);
+      dispatch(setCourses(courses));
     } catch (error) {
       console.error(error);
     }
   };
 
   useEffect(() => {
-    fetchCourses(filterEnrollments);
-  }, [currentUser, filterEnrollments]);
-
-  useEffect(() => {
-    fetchEnrollments();
-  }, [currentUser]);
+    if (enrolling) {
+      fetchCourses();
+    } else {
+      findCoursesForUser();
+    }
+  }, [currentUser, enrolling]);
 
   return (
     <div id="wd-dashboard" className="pt-3">
@@ -205,14 +206,14 @@ export default function Dashboard() {
                           </Button>
                         </div>
                       )}
-                      {currentUser.role === "STUDENT" && !filterEnrollments && (
+                      {currentUser.role === "STUDENT" && enrolling && (
                         <div>
-                          {enrolledCourseIds.includes(course._id) ? (
+                          {course.enrolled ? (
                             <Button
                               variant="danger"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                handleUnenroll(course._id);
+                              onClick={(event) => {
+                                event.preventDefault();
+                                updateEnrollment(course._id, !course.enrolled);
                               }}
                             >
                               Unenroll
@@ -220,9 +221,9 @@ export default function Dashboard() {
                           ) : (
                             <Button
                               variant="success"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                handleEnroll(course._id);
+                              onClick={(event) => {
+                                event.preventDefault();
+                                updateEnrollment(course._id, !course.enrolled);
                               }}
                             >
                               Enroll

@@ -14,7 +14,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useEffect } from "react";
 import * as coursesClient from "../client.ts";
 function formatDate(isoString: string): string {
-  const [year, month, day] = isoString.split("-").map(Number);
+  const [year, month, day] = isoString.slice(0, 10).split("-").map(Number);
   const date = new Date(year, month - 1, day);
   return date.toLocaleDateString("en-US", { month: "long", day: "numeric" });
 }
@@ -116,10 +116,14 @@ export default function Assignments() {
                   <div className="fs-6">
                     <span className="text-danger">Multiple Modules</span> |{" "}
                     <strong>Not available until</strong>{" "}
-                    {formatDate(assignment.availableFrom)} at 12:00am |
+                    {formatDate(
+                      new Date(assignment.availableFrom).toISOString(),
+                    )}{" "}
+                    at 12:00am |
                     <br />
-                    <strong>Due</strong> {formatDate(assignment.due)} at 11:59pm
-                    | {assignment.points} pts
+                    <strong>Due</strong>{" "}
+                    {formatDate(new Date(assignment.due).toISOString())} at
+                    11:59pm | {assignment.points} pts
                   </div>
                 </div>
               </div>
